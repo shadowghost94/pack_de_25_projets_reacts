@@ -6,13 +6,35 @@ import "./styles.css";
 
 function Accordeon() {
     const [selected, setSelected] = useState(null);
+    const [enableMultipleSelection, setEnableMultipleSelection] =
+        useState(false);
 
     function handleSingleSlection(objetid) {
-        setSelected(objetid);
+        if (enableMultipleSelection) {
+            setSelected(selected === objetid ? null : objetid);
+        }
+    }
+
+    function handleMultipleSelection() {
+        setEnableMultipleSelection(!enableMultipleSelection);
     }
 
     return (
         <div className="wrapper">
+            <button onClick={handleMultipleSelection}>
+                Enable Multiple Selection
+            </button>
+            {enableMultipleSelection ? (
+                <div>
+                    Veuillez cliquer sur le button ci-dessus pour désactiver la
+                    fonction système accordéon
+                </div>
+            ) : (
+                <div>
+                    Veuillez cliquer sur le button ci-dessus pour activer la
+                    fonction système accodéon
+                </div>
+            )}
             <div className="accordeon">
                 {data && data.length > 0 ? (
                     data.map((objetdata) => (
