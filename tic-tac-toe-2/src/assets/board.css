@@ -1,0 +1,16 @@
+.square {
+    border: 1px solid black;
+    width: 79px;
+    height: 79px;
+    color: black;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 32px;
+}
+
+.roww {
+    display: flex;
+}
