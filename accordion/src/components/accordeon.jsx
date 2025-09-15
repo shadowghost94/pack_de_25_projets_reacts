@@ -6,58 +6,57 @@ import "./styles.css";
 
 function Accordeon() {
     const [selected, setSelected] = useState(null);
-    const [enableMultipleSelection, setEnableMultipleSelection] =
-        useState(false);
+    const [multiSelection, setMultiSelection] = useState(false);
+    const [tableMultiSelection, setTableMultiSelection] = useState([]);
 
-    function handleSingleSlection(objetid) {
-        if (enableMultipleSelection) {
-            setSelected(selected === objetid ? null : objetid);
-        }
+    function handleSingleSelection(objetID) {
+        if (selected == objetID) setSelected(null);
+        else setSelected(objetID);
     }
-
-    function handleMultipleSelection() {
-        setEnableMultipleSelection(!enableMultipleSelection);
+    function EnableMultiSelection() {
+        if (multiSelection == true) setTableMultiSelection([]);
+        else setSelected(null);
+        setMultiSelection(!multiSelection);
     }
+    function handleMultiSelection(objetID) {
+        let cpyTableMultiSelection = [...tableMultiSelection];
+        const indexObjet = cpyTableMultiSelection.indexOf(objetID);
 
+        if (indexObjet == -1) cpyTableMultiSelection.push(objetID);
+        else cpyTableMultiSelection.splice(indexObjet, 1);
+
+        setTableMultiSelection(cpyTableMultiSelection);
+    }
     return (
         <div className="wrapper">
-            <button onClick={handleMultipleSelection}>
-                Enable Multiple Selection
+            <button onClick={EnableMultiSelection}>
+                Enable Multi Selection
             </button>
-            {enableMultipleSelection ? (
-                <div>
-                    Veuillez cliquer sur le button ci-dessus pour désactiver la
-                    fonction système accordéon
-                </div>
+            {multiSelection ? (
+                <div>La sélection multiple est activé.</div>
             ) : (
-                <div>
-                    Veuillez cliquer sur le button ci-dessus pour activer la
-                    fonction système accodéon
-                </div>
+                <div>La sélection multiple est désactivé.</div>
             )}
             <div className="accordeon">
-                {data && data.length > 0 ? (
-                    data.map((objetdata) => (
-                        <div className="objet" key={objetdata.id}>
-                            <div
-                                className="title"
-                                onClick={() =>
-                                    handleSingleSlection(objetdata.id)
-                                }
-                            >
-                                <h3>{objetdata.question}</h3>
-                                <span>+</span>
-                            </div>
-                            {selected === objetdata.id && (
-                                <div className="reponse">
-                                    {objetdata.reponse}
-                                </div>
-                            )}
+                {data.map((objetdata) => (
+                    <div className="objet">
+                        <div
+                            className="title"
+                            onClick={
+                                multiSelection
+                                    ? () => handleMultiSelection(objetdata.id)
+                                    : () => handleSingleSelection(objetdata.id)
+                            }
+                        >
+                            <h3>{objetdata.question}</h3>
+                            <span>+</span>
                         </div>
-                    ))
-                ) : (
-                    <div>Pas de données !</div>
-                )}
+                        {objetdata.id === selected ||
+                        tableMultiSelection.indexOf(objetdata.id) !== -1 ? (
+                            <div className="reponse">{objetdata.reponse}</div>
+                        ) : null}
+                    </div>
+                ))}
             </div>
         </div>
     );
